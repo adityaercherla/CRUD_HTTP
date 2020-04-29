@@ -1,0 +1,33 @@
+version: "3.3"
+services: 
+    express-server:
+        container_name: express-server
+        build: .
+        env_file: 
+            - .env
+        volumes: 
+            - ./src/app:/usr/src/app
+        command: 
+            npx nodemon -x ts-node /usr/src/app/main.ts
+        depends_on: 
+            - mongo
+        links: 
+            - mongo
+        ports: 
+            - "8080:8080"
+    mongo:
+        container_name: express-mongo
+        image: mongo:4.0
+        env_file: 
+            - .env
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=admin 
+            - MONGO_INITDB_ROOT_PASSWORD=root1234 
+            - MONGO_INITDB_DATABASE=$MONGO_DB
+        volumes:
+            - join_db:/data/db
+            - "./docker/db/scripts:/docker-entrypoint-initdb.d/"
+        ports:
+            - "27017:27017"
+volumes: 
+    join_db:
