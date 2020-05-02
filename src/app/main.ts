@@ -1,5 +1,5 @@
 import App from './app';
-import { UsersController} from "./controllers";
+import { UsersController} from "./controllers/userController";
 import { RulerController} from "./controllers/rulerController";
 import {ItemsController } from "./controllers/itemControler"
 import { config } from "dotenv";

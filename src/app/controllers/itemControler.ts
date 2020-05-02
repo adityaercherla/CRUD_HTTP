@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { Controller, Get, Post, RequiredParams, Delete } from "../helpers/decorators";
-import { ItemModel } from "../models/productModel";
+import { ItemModel as prod } from "../models/productModel";
 // import { Types } from "mongoose"
 
 
@@ -10,8 +10,8 @@ import { ItemModel } from "../models/productModel";
 export class ItemsController{
     
     @Get()
-    private _testCall(req: Request, resp: Response, next: NextFunction){
-        ItemModel.find((err: any, res: any[]) => {
+    public _getestCall(req: Request, resp: Response, next: NextFunction){
+        prod.find((err: any, res: any[]) => {
             if(!err){
                 resp.json(res);
                 
@@ -23,19 +23,17 @@ export class ItemsController{
     }
     @Get("/list")
     private _bustCall(req: Request, resp: Response, next: NextFunction){
-        ItemModel.find((err: any, res: any[]) => {
+        prod.find((err: any, res: any[]) => {
             if(!err){
                 resp.json(res);
-                
-
             }else{
                 resp.json({ status: false, message: err.message});
             }
         })
     }
-    @Get("/list/:id")
+    @Get("/week/:id")
     private _singleCall(req: Request, resp: Response, next: NextFunction){
-        ItemModel.findOne({_id:req.params.id},(err: any, res: any[]) => {
+        prod.find({"createdAt":{ $gte : "2020-04-23 00:00:00",$lt : "2020-04-30 00:00:00"}},(err: any, res: any[]) => {
             if(!err){
                 resp.json(res);
             }else{
@@ -46,9 +44,9 @@ export class ItemsController{
 
     @Post("/additem")
     @RequiredParams(["name", "price"])
-    private _postCall(req: any, resp: Response, next: NextFunction){
+    private _pstCall(req: any, resp: Response, next: NextFunction){
         let { name, price,brand} = req.body;
-        let newItem = new ItemModel({name, price,brand});
+        let newItem = new prod({name, price,brand});
         if(newItem.name == req.body.name)
         newItem.save((err: any, res: any) => {
             if(!err){
@@ -63,7 +61,7 @@ export class ItemsController{
     @RequiredParams(["name", "price"])
     private _PostCall(req: any, resp: Response, next: NextFunction){
         let { name, price,brand} = req.body;
-        let newItem = new ItemModel({name, price,brand});
+        let newItem = new prod({name, price,brand});
         newItem.save((err: any, res: any) => {
             if(!err){
                 resp.json(res);
@@ -87,7 +85,7 @@ export class ItemsController{
 
     @Delete("/:id")
     private _delCall(req: any, resp: Response, next: NextFunction){
-        ItemModel.findByIdAndRemove({_id:req.params.id},(err: any, res: any) => {
+        prod.findByIdAndRemove({_id:req.params.id},(err: any, res: any) => {
             if(!err){
                 resp.json(res);
                 console.log(res.name+" got deleted ")
@@ -99,7 +97,7 @@ export class ItemsController{
     
     @Delete("/list/:id")
     private _delall(req: any, resp: Response, next: NextFunction){
-        ItemModel.findOneAndDelete({_id:req.params.id,name:req.params.name},(err: any, res: any) => {
+        prod.findOneAndDelete({_id:req.params.id,name:req.params.name},(err: any, res: any) => {
             if(!err){
                 resp.json(res);
                 console.log(res.name+" got deleted ")

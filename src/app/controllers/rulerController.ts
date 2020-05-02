@@ -11,23 +11,23 @@ export class RulerController{
         RulerModel.find((err: any, res: any[]) => {
             if(!err){
                 resp.json(res);
-
             }else{
                 resp.json({ status: false, message: err.message});
             }
         })
     }
-    @Get("/leader/:id")
-    private _getCall(req: Request, resp: Response, next: NextFunction){
-        RulerModel.findById({_id:req.params.id},(err: any, res: any[]) => {
+    @Get("/week/:id")
+    private _singleCall(req: Request, resp: Response, next: NextFunction){
+        RulerModel.find({"createdAt":{ $gte : "2020-04-23 00:00:00",$lt : "2020-04-30 00:00:00"}},(err: any, res: any[]) => {
             if(!err){
                 resp.json(res);
-
             }else{
                 resp.json({ status: false, message: err.message});
             }
         })
     }
+    // let { name, price,brand} = req.body;
+    //     let newItem = new ItemModel({name, price,brand});
 
     @Post("/addruler")
     @RequiredParams(["name", "location","country","age"])
@@ -47,10 +47,10 @@ export class RulerController{
     @RequiredParams(["name", "location","country","age"])
     @ConvertToLowercase(["country","location"])
     private _PostCall(req: any, resp: Response, next: NextFunction){
-        let { name, location,country,age,qualification} = req.body;
-        let newRuler = new RulerModel({ name, location,country,age,qualification});
+        let { name, location,country,age,qualification,timestamp} = req.body;
+        let newRuler = new RulerModel({ name, location,country,age,qualification,timestamp});
         newRuler.save((err: any, ruler: any) => {
-            if(!err){
+            if(!err){ 
                 resp.json({status: true})
                 console.log(ruler.name+" is added to database")
             }else{
