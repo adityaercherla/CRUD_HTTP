@@ -16,6 +16,17 @@ export class RulerController{
             }
         })
     }
+    @Get("/am")
+    private _countCall(req: Request, resp: Response, next: NextFunction){
+        RulerModel.aggregate([{$match:{name:"Narendra Modi"}},{$group:{_id:{location:"$location"},total:{$sum:1}}},{$sort:{total:-1}}],(err: any, res: any[]) => {
+            if(!err){
+                resp.json(res);
+
+            }else{
+                resp.json({ status: false, message: err.message});
+            }
+        })
+    }
     @Get("/week/:id")
     private _singleCall(req: Request, resp: Response, next: NextFunction){
         RulerModel.find({"createdAt":{ $gte : "2020-04-23 00:00:00",$lt : "2020-04-30 00:00:00"}},(err: any, res: any[]) => {

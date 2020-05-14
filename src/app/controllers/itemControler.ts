@@ -21,6 +21,17 @@ export class ItemsController{
             }
         })
     }
+    @Get("/am")
+    private _countCall(req: Request, resp: Response, next: NextFunction){
+        prod.aggregate([{$group:{_id:"$_id",total:{$sum:"$price"}}},{$sort:{total:-1}}],(err: any, res: any[]) => {
+            if(!err){
+                resp.json(res);
+
+            }else{
+                resp.json({ status: false, message: err.message});
+            }
+        })
+    }
     @Get("/list")
     private _bustCall(req: Request, resp: Response, next: NextFunction){
         prod.find((err: any, res: any[]) => {
@@ -50,8 +61,8 @@ export class ItemsController{
         if(newItem.name == req.body.name)
         newItem.save((err: any, res: any) => {
             if(!err){
-                resp.json(res);
-                console.log(res.name+" got added succesfully")
+                let abcd=resp.json(res);
+                console.log(abcd)
             }else{
                 resp.json({ status: false, message: err.message});
             }

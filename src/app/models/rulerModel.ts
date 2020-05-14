@@ -7,7 +7,6 @@ const RulerSchema = new Schema({
     age: { type: Number,required:true },
     qualification: { type: String },
     //time : { type: Number, default: (new Date()).getTime() } 
-    time : { type : Date, default: Date.now }
 
 });
 
